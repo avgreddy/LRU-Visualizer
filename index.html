@@ -5,60 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LRU Cache Visualizer</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            display: flex;
-            height: 100vh;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        .container {
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
-        }
-        .input-container input, button {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 8px;
-            border: none;
-            width: 100px;
-        }
-        .input-container button {
-            background-color: #4CAF50;
-            color: #fff;
-            cursor: pointer;
-        }
-        .cache-container, .hashmap-container {
-            margin-top: 15px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-        }
-        .cache-item, .hashmap-item {
-            background-color: #ff9800;
-            color: #000;
-            padding: 10px 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-        }
-        h1, h2 {
-            margin-bottom: 15px;
-            color: #FFD700;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
         <h1>LRU Cache Visualizer</h1>
+
+        <div class="input-container">
+            <input type="number" id="capacityInput" placeholder="Set Capacity" min="1">
+            <button onclick="setCapacity()">Set Capacity</button>
+        </div>
+
         <div class="input-container">
             <input type="number" id="keyInput" placeholder="Key">
             <input type="number" id="valueInput" placeholder="Value">
@@ -66,63 +22,13 @@
             <button onclick="get()">Get</button>
         </div>
 
+        <h2>Cache (MRU → LRU)</h2>
         <div class="cache-container" id="cacheDisplay"></div>
 
-        <h2>HashMap Status</h2>
+        <h2>HashMap</h2>
         <div class="hashmap-container" id="hashMapDisplay"></div>
     </div>
 
-    <script>
-        const cache = [];
-        const hashMap = {};
-        const capacity = 3;
-
-        function renderCache() {
-            const cacheDisplay = document.getElementById("cacheDisplay");
-            cacheDisplay.innerHTML = cache.map(item => 
-                `<div class="cache-item">Key: ${item.key}, Value: ${item.value}</div>`
-            ).join('');
-        }
-
-        function renderHashMap() {
-            const hashMapDisplay = document.getElementById("hashMapDisplay");
-            hashMapDisplay.innerHTML = Object.keys(hashMap).map(key => 
-                `<div class="hashmap-item">Key: ${key}, Value: ${hashMap[key].value}</div>`
-            ).join('');
-        }
-
-        function put() {
-            const key = parseInt(document.getElementById("keyInput").value);
-            const value = parseInt(document.getElementById("valueInput").value);
-
-            if (isNaN(key) || isNaN(value)) return;
-
-            if (hashMap[key]) {
-                const index = cache.findIndex(item => item.key === key);
-                cache.splice(index, 1);
-            } else if (cache.length >= capacity) {
-                const removed = cache.pop();
-                delete hashMap[removed.key];
-            }
-
-            const newNode = { key, value };
-            cache.unshift(newNode);
-            hashMap[key] = newNode;
-
-            renderCache();
-            renderHashMap();
-        }
-
-        function get() {
-            const key = parseInt(document.getElementById("keyInput").value);
-            if (!hashMap[key]) return;
-
-            const index = cache.findIndex(item => item.key === key);
-            const [foundNode] = cache.splice(index, 1);
-            cache.unshift(foundNode);
-
-            renderCache();
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
